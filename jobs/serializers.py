@@ -10,17 +10,9 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = [
-            'id',
-            'plate_number',
-            'car_type',
-            'service',
-            'service_name',
-            'assigned_staff',
-            'staff_name',
-            'status',
-            'price',
-            'start_time',
-            'end_time',
-            'created_at',
-        ]
+        fields = '__all__'
+
+    def create(self, validated_data):
+        service = validated_data['service']
+        validated_data['price'] = service.price
+        return super().create(validated_data)
