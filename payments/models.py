@@ -13,4 +13,4 @@ class Payment(models.Model):
     transaction_id = models.CharField(max_length=100, blank=True, null=True)
 
     status = models.CharField(max_length=20)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
