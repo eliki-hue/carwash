@@ -53,3 +53,23 @@ class JobViewSet(ModelViewSet):
         job.save()
 
         return Response({"message": "Job completed"})
+
+
+def get_queryset(self):
+    status = self.request.query_params.get('status')
+
+    qs = Job.objects.select_related(
+        'service',
+        'assigned_staff'
+    )
+
+    if status:
+        qs = qs.filter(status=status)
+
+    return qs.only(
+        'id',
+        'plate_number',
+        'status',
+        'created_at',
+        'service__name'
+    ).order_by('-created_at')
