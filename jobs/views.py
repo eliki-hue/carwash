@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
-
+from users.permissions import IsManagerOrOwner
 from .models import Job
 from .serializers import JobSerializer
 
@@ -15,7 +15,7 @@ class JobViewSet(ModelViewSet):
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated]
 
-    # ✅ FILTER JOBS BY STATUS (OPTIMIZED FOR MOBILE)
+    #  FILTER JOBS BY STATUS (OPTIMIZED FOR MOBILE)
     def get_queryset(self):
         status = self.request.query_params.get('status')
         qs = super().get_queryset()
@@ -25,8 +25,8 @@ class JobViewSet(ModelViewSet):
 
         return qs.order_by('-created_at')
 
-    # ✅ START JOB
-    @action(detail=True, methods=['patch'])
+    #  START JOB
+    @action(detail=True, methods=['patch'], permission_classes=[IsManagerOrOwner])
     def start(self, request, pk=None):
         job = self.get_object()
 
