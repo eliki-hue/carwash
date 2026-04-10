@@ -23,3 +23,16 @@ class LoginView(APIView):
             "refresh": str(refresh),
             "role": user.role
         })
+    
+
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from .models import User
+from .serializers import UserCreateSerializer
+from .permissions import IsOwner
+
+
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
