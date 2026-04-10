@@ -16,7 +16,7 @@ permission_classes = [IsAuthenticated, IsManagerOrOwner]
 
 
 class DailyReportView(APIView):
-    permission_classes = [IsAuthenticated, IsManagerOrOwner]
+    # permission_classes = [IsAuthenticated, IsManagerOrOwner]
 
 
     def get(self, request):

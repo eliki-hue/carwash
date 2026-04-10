@@ -33,7 +33,9 @@ SECRET_KEY = 'django-insecure-iuk*4qj_s!_2(bpffu$6om35!gjotn!(=1mcx0cy1#jc(d8(b2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+# CORS_ALLOWED_ORIGIN = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'users.User'
 # Application definition
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'vehicles',
     'users',
     'jobs',
     'services',
@@ -63,6 +66,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,6 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
