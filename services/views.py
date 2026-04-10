@@ -1,20 +1,17 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from users.permissions import IsOwner
+from .models import Service, ServicePricing
+from .serializers import ServiceSerializer, ServicePricingSerializer
 
-from .models import Service
-from .serializers import ServiceSerializer
-
-
-from users.permissions import IsManagerOrOwner
 
 class ServiceViewSet(ModelViewSet):
-    queryset = Service.objects.all().order_by('price')
+    queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
 
-    def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsManagerOrOwner()]
-        return [IsAuthenticated()]
+
+class ServicePricingViewSet(ModelViewSet):
+    queryset = ServicePricing.objects.select_related("service", "vehicle_type")
+    serializer_class = ServicePricingSerializer
+    permission_classes = [IsAuthenticated, IsOwner]

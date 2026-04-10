@@ -1,7 +1,6 @@
 from django.db import models
 
-# Create your models here.
-# jobs/models.py
+
 class Job(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -11,12 +10,29 @@ class Job(models.Model):
     ]
 
     plate_number = models.CharField(max_length=20, db_index=True)
-    car_type = models.CharField(max_length=50)
 
-    service = models.ForeignKey('services.Service', on_delete=models.PROTECT)
-    assigned_staff = models.ForeignKey('users.User', null=True, on_delete=models.SET_NULL)
+    vehicle_type = models.ForeignKey(
+        'vehicles.VehicleType',
+        on_delete=models.PROTECT
+    )
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, db_index=True)
+    service = models.ForeignKey(
+        'services.Service',
+        on_delete=models.PROTECT
+    )
+
+    assigned_staff = models.ForeignKey(
+        'users.User',
+        null=True,
+        on_delete=models.SET_NULL
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        db_index=True
+    )
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -29,3 +45,6 @@ class Job(models.Model):
         indexes = [
             models.Index(fields=['status', 'created_at']),
         ]
+
+    def __str__(self):
+        return f"{self.plate_number} - {self.service}"
