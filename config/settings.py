@@ -24,6 +24,15 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# M-PESA Settings
+MPESA_CONSUMER_KEY = config("MPESA_CONSUMER_KEY")
+MPESA_CONSUMER_SECRET = config("MPESA_CONSUMER_SECRET")
+MPESA_SHORTCODE = config("MPESA_SHORTCODE")
+MPESA_PASSKEY = config("MPESA_PASSKEY", default="")
+MPESA_CALLBACK_URL = config("MPESA_CALLBACK_URL")
+MPESA_ENV = config("MPESA_ENV", default="sandbox")
+MPESA_OAUTH_URL = config('MPESA_OAUTH_URL')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 

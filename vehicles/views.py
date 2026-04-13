@@ -8,4 +8,4 @@ from .serializers import VehicleTypeSerializer
 class VehicleTypeViewSet(ModelViewSet):
     queryset = VehicleType.objects.all()
     serializer_class = VehicleTypeSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
