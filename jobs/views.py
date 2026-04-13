@@ -17,22 +17,22 @@ class JobViewSet(ModelViewSet):
         user = self.request.user
         status = self.request.query_params.get('status')
 
-        qs = super().get_queryset()
+        #  ADD select_related HERE
+        qs = Job.objects.select_related(
+            "service",
+            "vehicle_type",
+            "assigned_staff"
+        )
 
-        if user.role == "staff":
-            qs = qs.filter(assigned_staff=user)
+        #  Restrict staff to their jobs
+        # if user.role == "staff":
+            # qs = qs.filter(assigned_staff=user)
 
+        #  Filter by status
         if status:
             qs = qs.filter(status=status)
 
-        return qs.only(
-            'id',
-            'plate_number',
-            'status',
-            'created_at',
-            'service__name',
-            'assigned_staff__id'
-        ).order_by('-created_at')
+        return qs.order_by('-created_at')
 
     @action(detail=True, methods=['post'])
     def start(self, request, pk=None):
