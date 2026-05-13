@@ -42,24 +42,22 @@ SECRET_KEY = 'django-insecure-iuk*4qj_s!_2(bpffu$6om35!gjotn!(=1mcx0cy1#jc(d8(b2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-# ALLOWED_HOSTS = [config("ALLOWED_HOSTS")]
-ALLOWED_HOSTS = ["api.marjiteck.com"]
+ALLOWED_HOSTS = [
+    "api.marjiteck.com",
+]
+
 CORS_ALLOWED_ORIGINS = [
     "https://api.marjiteck.com",
 ]
-# CORS_ALLOW_ALL_ORIGINS = True
+
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:8001",
-    "http://api.marjiteck.com",
     "https://api.marjiteck.com",
-    "https://unmisanthropically-transcultural-minnie.ngrok-free.dev",
 ]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 AUTH_USER_MODEL = 'users.User'
 # Application definition
