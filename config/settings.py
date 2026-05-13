@@ -45,6 +45,13 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 # CORS_ALLOWED_ORIGIN = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8001",
+    "https://unmisanthropically-transcultural-minnie.ngrok-free.dev",
+]
 
 AUTH_USER_MODEL = 'users.User'
 # Application definition
@@ -156,3 +163,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
