@@ -46,7 +46,9 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ALLOWED_HOSTS = [config("ALLOWED_HOSTS")]
 ALLOWED_HOSTS = ["api.marjiteck.com"]
-CORS_ALLOWED_ORIGINS = ['api.marjiteck.com']
+CORS_ALLOWED_ORIGINS = [
+    "https://api.marjiteck.com",
+]
 # CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
@@ -69,7 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    "corsheader",
+    "corsheaders",
 
     'vehicles',
     'users',
@@ -86,7 +88,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-SSIMPLE_JWT = {
+SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
