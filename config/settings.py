@@ -43,7 +43,8 @@ SECRET_KEY = 'django-insecure-iuk*4qj_s!_2(bpffu$6om35!gjotn!(=1mcx0cy1#jc(d8(b2
 DEBUG = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 # ALLOWED_HOSTS = [config("ALLOWED_HOSTS")]
 ALLOWED_HOSTS = ["api.marjiteck.com"]
 CORS_ALLOWED_ORIGINS = [
