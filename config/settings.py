@@ -42,7 +42,9 @@ SECRET_KEY = 'django-insecure-iuk*4qj_s!_2(bpffu$6om35!gjotn!(=1mcx0cy1#jc(d8(b2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+ALLOWED_HOSTS = [config("ALLOWED_HOSTS")]
 # CORS_ALLOWED_ORIGIN = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
@@ -50,6 +52,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8001",
+    "https://api.marjiteck.com"
     "https://unmisanthropically-transcultural-minnie.ngrok-free.dev",
 ]
 
