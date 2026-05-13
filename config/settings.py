@@ -45,8 +45,8 @@ DEBUG = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ALLOWED_HOSTS = [config("ALLOWED_HOSTS")]
-ALLOWED_HOSTS = ["https://api.marjiteck.com"]
-CORS_ALLOWED_ORIGIN = ['https://api.marjiteck.com']
+ALLOWED_HOSTS = ["api.marjiteck.com"]
+CORS_ALLOWED_ORIGINS = ['api.marjiteck.com']
 # CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
