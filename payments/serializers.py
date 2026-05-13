@@ -15,7 +15,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         read_only_fields = ["status", "amount"]
 
     def validate(self, data):
-        method = data.get("method")
+        method = data.get("payment_method")
         job = data.get("job")
 
         #  Prevent duplicate payment
@@ -37,7 +37,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        method = validated_data["method"]
+        method = validated_data["payment_method"]
         job = validated_data["job"]
 
         #  FORCE CORRECT AMOUNT (SECURITY)
