@@ -55,6 +55,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8001",
+    "http://api.marjiteck.com",
     "https://api.marjiteck.com",
     "https://unmisanthropically-transcultural-minnie.ngrok-free.dev",
 ]
