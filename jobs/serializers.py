@@ -7,7 +7,7 @@ class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
         fields = "__all__"
-        read_only_fields = ["price", "status"]
+        read_only_fields = ["price"]
 
     def create(self, validated_data):
         service = validated_data["service"]
