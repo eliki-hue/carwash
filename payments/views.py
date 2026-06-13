@@ -7,6 +7,7 @@ from django.db import transaction
 from rest_framework import status
 from django.utils import timezone
 
+
 from .models import Payment
 from .serializers import PaymentSerializer
 from jobs.models import Job
@@ -339,3 +340,50 @@ def mpesa_callback(request):
             },
             status=500
         )
+@api_view(['POST'])
+@permission_classes([AllowAny])  # Safaricom won't send auth
+@authentication_classes([])
+def mpesa_callback(request):
+    data = request.data
+
+    try:
+        stk_callback = data["Body"]["stkCallback"]
+        checkout_id = stk_callback["CheckoutRequestID"]
+        result_code = stk_callback["ResultCode"]
+
+        payment = Payment.objects.filter(
+            checkout_request_id=checkout_id
+        ).select_related("job").first()
+
+        if not payment:
+            return Response({"message": "Payment not found"}, status=404)
+
+        #  FAILED PAYMENT
+        if result_code != 0:
+            payment.status = "failed"
+            payment.save(update_fields=["status"])
+            return Response({"message": "Payment failed"})
+
+        #  SUCCESS PAYMENT
+        metadata = stk_callback.get("CallbackMetadata", {}).get("Item", [])
+
+        receipt = None
+
+        for item in metadata:
+            if item.get("Name") == "MpesaReceiptNumber":
+                receipt = item.get("Value")
+
+        with transaction.atomic():
+            payment.status = "success"
+            payment.transaction_id = receipt
+            payment.save(update_fields=["status", "transaction_id"])
+
+            #  UPDATE JOB
+            job = payment.job
+            job.status = "paid"
+            job.save(update_fields=["status"])
+
+        return Response({"message": "Payment successful"})
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
