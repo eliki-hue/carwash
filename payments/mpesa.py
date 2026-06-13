@@ -10,6 +10,7 @@ MPESA_TOKEN_CACHE_KEY = "mpesa_access_token"
 MPESA_TOKEN_TTL = 3500
 MPESA_SHORTCODE = settings.MPESA_SHORTCODE
 MPESA_PASSKEY = settings.MPESA_PASSKEY
+MPESA_CALLBACK_URL = settings.MPESA_CALLBACK_URL
 
 def get_access_token():
     token = cache.get(MPESA_TOKEN_CACHE_KEY)
@@ -61,7 +62,7 @@ def stk_push(phone_number, amount):
         "PartyA": phone_number,
         "PartyB": MPESA_SHORTCODE,
         "PhoneNumber": phone_number,
-        "CallBackURL": "https://unmisanthropically-transcultural-minnie.ngrok-free.dev/api/payments/callback/",
+        "CallBackURL": MPESA_CALLBACK_URL,
         "AccountReference": "CarWash",
         "TransactionDesc": "Car Wash Payment",
     }

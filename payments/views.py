@@ -48,8 +48,11 @@ class PaymentViewSet(ModelViewSet):
             return Response({"error": "Job already has a payment"}, status=400)
 
         #  Only completed jobs
-        if job.status != "completed":
-            return Response({"error": "Only completed jobs can be paid"}, status=400)
+        if job.status not in ["in_progress", "completed"]:
+            return Response(
+                {"error": "Job must be in progress"},
+                status=400
+            )
 
         #  CALL MPESA
         response = stk_push(phone_number, job.price)
@@ -77,6 +80,20 @@ class PaymentViewSet(ModelViewSet):
             "checkout_request_id": checkout_id
         })
     
+
+    @action(detail=False, methods=['get'], url_path=r'status/(?P<checkout_id>[^/.]+)')
+    def status(self, request, checkout_id=None):
+        payment = Payment.objects.filter(
+            checkout_request_id=checkout_id
+        ).first()
+
+        if not payment:
+            return Response({"status": "not_found"}, status=404)
+
+        return Response({
+            "status": payment.status,
+            "transaction_id": payment.transaction_id,
+        })
 
 
 @api_view(['POST'])
