@@ -336,8 +336,8 @@ def mpesa_callback(request):
 
             job = payment.job
 
-            if job.status != "paid":
-                job.status = "paid"
+            if job.status != "completed":
+                job.status = "completed"
                 job.save(update_fields=["status"])
 
         return Response({
