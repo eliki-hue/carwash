@@ -120,23 +120,8 @@ class PaymentViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if job.payments.filter(status="success").exists():
-            return Response(
-                {"error": "Successful payment already exists"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
         # --------------------------------------------------
-        # 2. Pending request already exists?
-        # --------------------------------------------------
-        if job.payments.filter(status="pending").exists():
-            return Response(
-                {"error": "Pending payment request already exists"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # --------------------------------------------------
-        # 3. Get last STK attempt
+        # 2. Get latest STK payment
         # --------------------------------------------------
         last_payment = (
             job.payments
@@ -152,7 +137,25 @@ class PaymentViewSet(ModelViewSet):
             )
 
         # --------------------------------------------------
-        # 4. Allow retry only for failed attempts
+        # 3. Successful payment exists?
+        # --------------------------------------------------
+        if job.payments.filter(status="success").exists():
+            return Response(
+                {"error": "Successful payment already exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # --------------------------------------------------
+        # 4. Latest payment still pending?
+        # --------------------------------------------------
+        if last_payment.status == "pending":
+            return Response(
+                {"error": "Pending payment request already exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # --------------------------------------------------
+        # 5. Allow retry only for failed statuses
         # --------------------------------------------------
         if last_payment.status not in [
             "failed",
@@ -161,14 +164,25 @@ class PaymentViewSet(ModelViewSet):
         ]:
             return Response(
                 {
-                    "error":
-                    f"Cannot retry payment with status '{last_payment.status}'"
+                    "error": (
+                        f"Cannot retry payment with status "
+                        f"'{last_payment.status}'"
+                    )
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         # --------------------------------------------------
-        # 5. Send new STK push
+        # 6. Ensure phone number exists
+        # --------------------------------------------------
+        if not last_payment.phone_number:
+            return Response(
+                {"error": "No phone number found for previous payment"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # --------------------------------------------------
+        # 7. Send STK Push
         # --------------------------------------------------
         mpesa_response = stk_push(
             phone_number=last_payment.phone_number,
@@ -189,7 +203,7 @@ class PaymentViewSet(ModelViewSet):
             )
 
         # --------------------------------------------------
-        # 6. Create NEW payment attempt
+        # 8. Create NEW payment attempt
         # --------------------------------------------------
         payment = Payment.objects.create(
             job=job,
