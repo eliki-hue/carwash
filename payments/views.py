@@ -354,50 +354,50 @@ def mpesa_callback(request):
             },
             status=500
         )
-@api_view(['POST'])
-@permission_classes([AllowAny])  # Safaricom won't send auth
-@authentication_classes([])
-def mpesa_callback(request):
-    data = request.data
+# @api_view(['POST'])
+# @permission_classes([AllowAny])  # Safaricom won't send auth
+# @authentication_classes([])
+# def mpesa_callback(request):
+#     data = request.data
 
-    try:
-        stk_callback = data["Body"]["stkCallback"]
-        checkout_id = stk_callback["CheckoutRequestID"]
-        result_code = stk_callback["ResultCode"]
+#     try:
+#         stk_callback = data["Body"]["stkCallback"]
+#         checkout_id = stk_callback["CheckoutRequestID"]
+#         result_code = stk_callback["ResultCode"]
 
-        payment = Payment.objects.filter(
-            checkout_request_id=checkout_id
-        ).select_related("job").first()
+#         payment = Payment.objects.filter(
+#             checkout_request_id=checkout_id
+#         ).select_related("job").first()
 
-        if not payment:
-            return Response({"message": "Payment not found"}, status=404)
+#         if not payment:
+#             return Response({"message": "Payment not found"}, status=404)
 
-        #  FAILED PAYMENT
-        if result_code != 0:
-            payment.status = "failed"
-            payment.save(update_fields=["status"])
-            return Response({"message": "Payment failed"})
+#         #  FAILED PAYMENT
+#         if result_code != 0:
+#             payment.status = "failed"
+#             payment.save(update_fields=["status"])
+#             return Response({"message": "Payment failed"})
 
-        #  SUCCESS PAYMENT
-        metadata = stk_callback.get("CallbackMetadata", {}).get("Item", [])
+#         #  SUCCESS PAYMENT
+#         metadata = stk_callback.get("CallbackMetadata", {}).get("Item", [])
 
-        receipt = None
+#         receipt = None
 
-        for item in metadata:
-            if item.get("Name") == "MpesaReceiptNumber":
-                receipt = item.get("Value")
+#         for item in metadata:
+#             if item.get("Name") == "MpesaReceiptNumber":
+#                 receipt = item.get("Value")
 
-        with transaction.atomic():
-            payment.status = "success"
-            payment.mpesa_receipt = receipt
-            payment.save(update_fields=["status", "mpesa_receipt"])
+#         with transaction.atomic():
+#             payment.status = "success"
+#             payment.mpesa_receipt = receipt
+#             payment.save(update_fields=["status", "mpesa_receipt"])
 
-            #  UPDATE JOB
-            job = payment.job
-            job.status = "paid"
-            job.save(update_fields=["status"])
+#             #  UPDATE JOB
+#             job = payment.job
+#             job.status = "paid"
+#             job.save(update_fields=["status"])
 
-        return Response({"message": "Payment successful"})
+#         return Response({"message": "Payment successful"})
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
+#     except Exception as e:
+#         return Response({"error": str(e)}, status=500)
