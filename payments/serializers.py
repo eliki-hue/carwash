@@ -27,7 +27,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Only completed jobs can be paid")
 
         #  Manual MPESA requires transaction ID
-        if method == "mpesa_manual" and not data.get("transaction_id"):
+        if method == "mpesa_manual" and not data.get("mpesa_receipt"):
             raise serializers.ValidationError("Transaction ID required")
 
         #  STK requires phone number

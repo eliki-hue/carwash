@@ -95,7 +95,7 @@ class PaymentViewSet(ModelViewSet):
 
         return Response({
             "status": payment.status,
-            "transaction_id": payment.transaction_id,
+            "mpesa_receipt": payment.mpesa_receipt,
         })
 
 
@@ -308,7 +308,7 @@ def mpesa_callback(request):
         with transaction.atomic():
 
             payment.status = "success"
-            payment.transaction_id = receipt
+            payment.mpesa_receipt = receipt
 
             if amount:
                 payment.amount = amount
@@ -375,8 +375,8 @@ def mpesa_callback(request):
 
         with transaction.atomic():
             payment.status = "success"
-            payment.transaction_id = receipt
-            payment.save(update_fields=["status", "transaction_id"])
+            payment.mpesa_receipt = receipt
+            payment.save(update_fields=["status", "mpesa_receipt"])
 
             #  UPDATE JOB
             job = payment.job
