@@ -49,10 +49,10 @@ class MonthlyPerformanceView(APIView):
     permission_classes = [IsAuthenticated, IsManagerOrOwner]
 
     def get(self, request):
-        year = request.query_params.get('year', now().year)
+        year = request.query_params.get('year')
         
         try:
-            year = int(year)
+            year = int(year) if year else now().year
         except ValueError:
             year = now().year
 
