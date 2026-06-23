@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'services',
     'payments',
     'reports',
+    'expenses',
     
 ]
 

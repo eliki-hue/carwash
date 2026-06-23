@@ -13,6 +13,11 @@ from django.db.models.functions import ExtractMonth, ExtractYear
 from jobs.models import Job
 from payments.models import Payment
 from users.permissions import IsManagerOrOwner
+from expenses.models import Expense
+from payments.models import Payment
+
+from django.db.models import Sum
+from django.utils.timezone import now
 
 permission_classes = [IsAuthenticated, IsManagerOrOwner]
 
@@ -118,3 +123,36 @@ class StaffPerformanceView(APIView):
         ).order_by('-total_jobs')
 
         return Response(data)
+
+
+class ProfitReportView(APIView):
+    permission_classes = [IsAuthenticated, IsManagerOrOwner]
+
+    def get(self, request):
+        today = now().date()
+
+        revenue = (
+            Payment.objects.filter(
+                status="success",
+                created_at__date=today
+            ).aggregate(
+                total=Sum("amount")
+            )["total"] or 0
+        )
+
+        expenses = (
+            Expense.objects.filter(
+                expense_date=today
+            ).aggregate(
+                total=Sum("amount")
+            )["total"] or 0
+        )
+
+        profit = revenue - expenses
+
+        return Response({
+            "date": today,
+            "revenue": revenue,
+            "expenses": expenses,
+            "profit": profit
+        })
