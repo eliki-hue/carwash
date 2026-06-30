@@ -39,7 +39,7 @@ class JobViewSet(ModelViewSet):
         with transaction.atomic():
             job = self.get_object()
 
-            if request.user.role not in ['staff', 'manager']:
+            if request.user.role not in ['staff', 'manager', 'owner']:
                 return Response({"error": "Not allowed"}, status=403)
 
             if job.status != 'pending':
@@ -56,7 +56,7 @@ class JobViewSet(ModelViewSet):
         with transaction.atomic():
             job = self.get_object()
 
-            if request.user.role not in ['staff', 'manager']:
+            if request.user.role not in ['staff', 'manager', 'owner']:
                 return Response({"error": "Not allowed"}, status=403)
 
             if job.status != 'in_progress':

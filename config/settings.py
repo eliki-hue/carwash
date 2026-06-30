@@ -22,7 +22,10 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+PAYMENT_PROVIDER = config(
+    "PAYMENT_PROVIDER",
+    default="daraja"
+)
 
 # M-PESA Settings
 MPESA_CONSUMER_KEY = config("MPESA_CONSUMER_KEY")
@@ -32,6 +35,10 @@ MPESA_PASSKEY = config("MPESA_PASSKEY", default="")
 MPESA_CALLBACK_URL = config("MPESA_CALLBACK_URL")
 MPESA_ENV = config("MPESA_ENV", default="sandbox")
 MPESA_OAUTH_URL = config('MPESA_OAUTH_URL')
+MPESA_STK_URL = config(
+    "MPESA_STK_URL",
+    default="https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
