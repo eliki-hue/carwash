@@ -82,9 +82,9 @@ class Payment(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['status']),
-            models.Index(fields=['method']),
-            models.Index(fields=['created_at']),
+            models.Index(fields=["status", "paid_at"]),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["checkout_request_id"]),
         ]
 
 
